@@ -1,6 +1,6 @@
 .hero{
     background-image:url("../../assets/hero.webp");
-    height: 85vh;
+    height: 84vh;
     background-size: cover;
     position: relative;
     display:flex;
@@ -37,6 +37,10 @@
             padding: 15px;
             font-size: 16px;
             font-weight:400;
+
+            &:focus {
+                outline: none;
+                }
         }
 
         button {
@@ -47,6 +51,10 @@
             background-color: rgb(255, 115, 0);
             color: white;
             transition: 0.3s;
+
+            &:focus {
+                outline: none;
+                }
 
             &:hover {
                 background-color:rgb(180, 85, 6);

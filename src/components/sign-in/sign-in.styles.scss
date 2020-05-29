@@ -1,0 +1,14 @@
+.signInContainer {
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+}
+
+.signInTitle {
+    margin: 10px 0;
+}
+
+.signInButtons {
+    display: flex;
+    justify-content: space-between;
+}
