@@ -1,12 +1,14 @@
- import React from 'react';
+import React from 'react';
 
- import './homepage.styles.scss';
- 
- const HomePage = () => (
-     <>
-     HomePage
-     </>
- )
+import Hero from '../../components/hero/hero.component';
 
- export default HomePage;
- 
+import './homepage.styles.scss';
+
+const HomePage = () => (
+    <div className='HomePageContainer'>
+        HomePage
+        <Hero />
+    </div>
+)
+
+export default HomePage;
