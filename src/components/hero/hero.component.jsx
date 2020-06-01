@@ -14,7 +14,7 @@ const Hero = ({fetchCollections}) => {
         <div className="hero">
             <div className="main-title">Your Local Delivery</div>
             <div className="main-input">
-                <input onChange={handleChange} name="location" type="text" placeholder="Enter Your Address"></input>
+                <input onChange={handleChange} name="location" type="text" placeholder="Enter Your City Location" autoComplete="off"></input>
                 <button onClick={() => fetchCollections(value)}>{"Find Local Restaurants".toUpperCase()}</button>
             </div>
         </div>
