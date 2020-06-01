@@ -1,12 +1,8 @@
-const INITIAL_STATE = {
-    apiData: []
-}
+import { combineReducers } from 'redux';
+import shopReducer from './shop/shop.reducer';
 
-const rootReducer = ( state = INITIAL_STATE, action) => {
-    switch (action.type) {
-        default:
-            return state;
-    }
-}
+const rootReducer = combineReducers({
+    shop: shopReducer
+})
 
 export default rootReducer;
