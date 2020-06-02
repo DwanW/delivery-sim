@@ -51,6 +51,11 @@
             background-color: rgb(255, 115, 0);
             color: white;
             transition: 0.3s;
+            height:50px;
+            overflow: hidden;
+            display:flex;
+            justify-content: center;
+            align-items: center;
 
             &:focus {
                 outline: none;
