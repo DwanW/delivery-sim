@@ -1,11 +1,15 @@
 from flask import Flask, jsonify, request
 import psycopg2 as pg2
+import jwt
 import atexit
+import uuid
+from werkzeug.security import generate_password_hash, check_password_hash,safe_str_cmp
+
 
 # What the server does for this application:
 # giving invoice ID: grab invoice information from each table and put data in a dictionary
-# for sign in, giving username and hashed password: find if credential matches, if true return authenticated, else failed to authenticate
-# for sign up, giving username and hashed password: find if username exist, if true return failed to sign up, else write to database user table
+# for sign in, sending username and hashed password: find if credential matches, if true return authenticated, else failed to authenticate
+# for sign up, sending username and hashed password: find if username exist, if true return failed to sign up, else write to database user table
 # Done :) giving category list, if match to category table exist return items as a dictionaries inside list, else return the category other
 # giving item ID,
 app = Flask(__name__)
@@ -33,15 +37,38 @@ def get_cuisine_menu(clist, dataDict):
 			break
 	cur.execute(f'SELECT * FROM item WHERE item."CategoryID" = {categoryID}')
 	item_data = cur.fetchall()
-	return {"name":cuisineName,"ID":categoryID, "menu": [{"ItemID":ItemID, "CategoryID":CategoryID, "ItemName": ItemName, "Price":float(Price), "ImgUrl" : ImgUrl, "Description": Description} for ItemID, CategoryID, ItemName, Price, ImgUrl, Description in item_data]}
+	return {"name":cuisineName,"ID":categoryID, "menu": [{
+	"ItemID":ItemID,
+	"CategoryID":CategoryID,
+	"ItemName": ItemName,
+	"Price":float(Price),
+	"ImgUrl" : ImgUrl,
+	"Description": Description
+	} for ItemID, CategoryID, ItemName, Price, ImgUrl, Description in item_data]}
 
 # mockdata gathering logic
 @app.route('/getmenu', methods=['POST'])
 def get_menu_list():
-	req_json = request.get_json();
+	req_json = request.get_json()
 
 	menu = get_cuisine_menu(req_json,category_dict)
 	return jsonify(menu), 200
+
+key = 'secret'
+encoded = jwt.encode({'some': 'wtf'}, key, algorithm='HS256')
+
+# authentication
+@app.route('/signin', methods=['POST'])
+def sign_in_authentication:
+	req_json = request.get_json()
+
+@app.route('/signup', methods=['POST'])
+def sign_up_check:
+	req_json = request.get_json()
+
+@app.route('/signout', methods=['GET'])
+def sign_out:
+	pass
 
 @atexit.register
 def close_db_connection():
