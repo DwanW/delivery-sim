@@ -3,6 +3,7 @@ import psycopg2 as pg2
 import jwt
 import atexit
 import uuid
+import psycopg2.extras
 from werkzeug.security import generate_password_hash, check_password_hash,safe_str_cmp
 import datetime
 from functools import wraps
@@ -20,6 +21,7 @@ app.config['SECRET_KEY'] = 'camel2020'
 secret = '123'
 conn = pg2.connect(database='camel', user='postgres',password=secret)
 cur = conn.cursor()
+psycopg2.extras.register_uuid()
 
 cur.execute('SELECT * FROM category')
 category_data = cur.fetchall()
@@ -36,14 +38,19 @@ def token_required(f):
 		if not token:
 			return jsonify({'message': 'Token is missing'}), 401
 		
-		# try:
-		# 	data = jwt.decode(token, app.config['SECRET_KEY'])
-		# 	cur.execute(f"SELECT * FROM user_data WHERE user_data.username = '{data.username}'")
-		# 	current_user = 
+		if token in blacklist:
+			return jsonify({'message' : 'Token is invalid'}), 401
+		
+		try:
+			data = jwt.decode(token, app.config['SECRET_KEY'])
+			cur.execute(f"SELECT * FROM user_data WHERE user_data.userid = '{data['public_id']}'")
+			current_user = cur.fetchone()
+		except: 
+			return jsonify({'message' : 'Token is invalid'}), 401
+		
+		return f(current_user, *args, **kwargs)
 
-@app.route('/')
-def hello_world():
-    return jsonify('Hello, World!'),200
+	return decorated
 
 def get_cuisine_menu(clist, dataDict):
 	cuisineName = "Other"
@@ -75,15 +82,26 @@ def get_menu_list():
 # crud user table
 
 @app.route('/user', methods=['POST'])
-def create_user():
+@token_required
+def create_user(current_user):
+	print(current_user)
 	req_json = request.get_json()
 	username = req_json['username']
 	current_time = datetime.datetime.utcnow()
 	hashed_password = generate_password_hash(req_json['password'], method='sha256')
-	insert_sql = f"INSERT INTO user_data (username, password, date_joined) VALUES ('{username}', '{hashed_password}', '{current_time}');"
-	cur.execute(insert_sql)
+	cur.execute("INSERT INTO user_data (userid, username, password, date_joined) VALUES (%s,%s,%s,%s)", (uuid.uuid4(), username, hashed_password, current_time))
 	conn.commit()
-	return jsonify({"message":"success created user"})
+	return jsonify({"message":"successfully created user"})
+
+@app.route('/user/<userid>', methods=['DELETE'])
+@token_required
+def delete_user(current_user,userid):
+	try:
+		cur.execute(f"DELETE FROM user_data WHERE userid = '{userid}'")
+		conn.commit()
+		return jsonify({"message":"successfully deleted user"})
+	except:
+		return jsonify({"message":"user does not exist"})
 
 # authentication
 @app.route('/signin', methods=['POST'])
@@ -95,11 +113,12 @@ def sign_in_authentication():
 
 	cur.execute(f"SELECT * FROM user_data WHERE user_data.username = '{auth.username}'")
 	user = cur.fetchone()
-	print(user[2])
+
 	if not user:
 		return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!!!"'})
+
 	if check_password_hash(user[2], auth.password):
-		token = jwt.encode({'public_id':user[0], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+		token = jwt.encode({'public_id':str(user[0]), 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
 
 		return jsonify({'token': token.decode('UTF-8')})
 	
@@ -108,11 +127,19 @@ def sign_in_authentication():
 @app.route('/signup', methods=['POST'])
 def sign_up_check():
 	req_json = request.get_json()
-	return '123'
+	username = req_json['username']
 
-@app.route('/signout', methods=['GET'])
-def sign_out():
-	pass
+	cur.execute(f"SELECT username FROM user_data WHERE username = '{username}'")
+	exist_user = cur.fetchone()
+	print(exist_user)
+
+	if exist_user:
+		return jsonify({"message": "sign up failed, please try a different username"})
+	current_time = datetime.datetime.utcnow()
+	hashed_password = generate_password_hash(req_json['password'], method='sha256')
+	cur.execute("INSERT INTO user_data (userid, username, password, date_joined) VALUES (%s,%s,%s,%s)", (uuid.uuid4(), username, hashed_password, current_time))
+	conn.commit()
+	return jsonify({"message":"successfully created user"})
 
 @atexit.register
 def close_db_connection():
