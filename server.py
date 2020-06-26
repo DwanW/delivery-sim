@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, make_response
+from flask_cors import CORS
 import psycopg2 as pg2
 import jwt
 import atexit
@@ -15,6 +16,7 @@ from functools import wraps
 # Done :) giving category list, if match to category table exist return items as a dictionaries inside list, else return the category other
 # giving item ID,
 app = Flask(__name__)
+CORS(app)
 
 app.config['SECRET_KEY'] = 'camel2020'
 # initialize db connection
@@ -87,14 +89,15 @@ def create_user(current_user):
 	print(current_user)
 	req_json = request.get_json()
 	username = req_json['username']
+	email = req_json['email']
 	current_time = datetime.datetime.utcnow()
 	hashed_password = generate_password_hash(req_json['password'], method='sha256')
-	cur.execute("INSERT INTO user_data (userid, username, password, date_joined) VALUES (%s,%s,%s,%s)", (uuid.uuid4(), username, hashed_password, current_time))
+	cur.execute("INSERT INTO user_data (userid, username, email, password, date_joined) VALUES (%s,%s,%s,%s,%s)", (uuid.uuid4(), username, email, hashed_password, current_time))
 	conn.commit()
 	return jsonify({"message":"successfully created user"})
 
 @app.route('/user/<userid>', methods=['DELETE'])
-@token_required
+# @token_required
 def delete_user(current_user,userid):
 	try:
 		cur.execute(f"DELETE FROM user_data WHERE userid = '{userid}'")
@@ -104,7 +107,7 @@ def delete_user(current_user,userid):
 		return jsonify({"message":"user does not exist"})
 
 # authentication
-@app.route('/signin', methods=['POST'])
+@app.route('/signin', methods=['GET'])
 def sign_in_authentication():
 	auth = request.authorization
 
@@ -113,31 +116,31 @@ def sign_in_authentication():
 
 	cur.execute(f"SELECT * FROM user_data WHERE user_data.username = '{auth.username}'")
 	user = cur.fetchone()
-
+	
 	if not user:
 		return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!!!"'})
 
-	if check_password_hash(user[2], auth.password):
+	if check_password_hash(user[3], auth.password):
 		token = jwt.encode({'public_id':str(user[0]), 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
 
 		return jsonify({'token': token.decode('UTF-8')})
-	
+		
 	return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!!!"'})
 
 @app.route('/signup', methods=['POST'])
 def sign_up_check():
 	req_json = request.get_json()
 	username = req_json['username']
+	email = req_json['email']
 
 	cur.execute(f"SELECT username FROM user_data WHERE username = '{username}'")
 	exist_user = cur.fetchone()
-	print(exist_user)
 
 	if exist_user:
 		return jsonify({"message": "sign up failed, please try a different username"})
 	current_time = datetime.datetime.utcnow()
 	hashed_password = generate_password_hash(req_json['password'], method='sha256')
-	cur.execute("INSERT INTO user_data (userid, username, password, date_joined) VALUES (%s,%s,%s,%s)", (uuid.uuid4(), username, hashed_password, current_time))
+	cur.execute("INSERT INTO user_data (userid, username, email, password, date_joined) VALUES (%s,%s,%s,%s,%s)", (uuid.uuid4(), username, email, hashed_password, current_time))
 	conn.commit()
 	return jsonify({"message":"successfully created user"})
 

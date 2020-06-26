@@ -3,15 +3,18 @@ import React, { useState } from 'react';
 import './sign-in.styles.scss';
 import FormInput from '../form-input/form-input';
 import CustomButton from '../custom-button/custom-button.component';
+import { signInStartAsync } from '../../redux/user/user.actions';
 
-const SignIn = () => {
-    const [userCredentials, setCredentials] = useState({ email:'', password:'' });
+import { connect } from 'react-redux';
 
-    const {email, password} = userCredentials;
+const SignIn = ({fetchUser}) => {
+    const [userCredentials, setCredentials] = useState({ username:'', password:'' });
+
+    const {username, password} = userCredentials;
 
     const handleSubmit = async event => {
         event.preventDefault();
-        console.log(email, password);
+        fetchUser(username, password);
     }
 
     const handleChange = event => {
@@ -22,9 +25,9 @@ const SignIn = () => {
     return (
         <div className="signInContainer">
             <h2 className="signInTitle">I already have an account</h2>
-            <span>Sign in with Email and Password</span>
+            <span>Sign in with Username and Password</span>
             <form onSubmit={handleSubmit}>
-                <FormInput name='email' type='email' label='Email' value={email} handleChange={handleChange} />
+                <FormInput name='username' type='username' label='Username' value={username} handleChange={handleChange} />
                 <FormInput
                     name='password'
                     type='password'
@@ -41,4 +44,8 @@ const SignIn = () => {
     )
 }
 
-export default SignIn;
+const mapDispatchToProps = dispatch => ({
+    fetchUser: (username,password) => dispatch(signInStartAsync(username,password))
+});
+
+export default connect(null,mapDispatchToProps)(SignIn);
