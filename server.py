@@ -40,9 +40,6 @@ def token_required(f):
 		if not token:
 			return jsonify({'message': 'Token is missing'}), 401
 		
-		if token in blacklist:
-			return jsonify({'message' : 'Token is invalid'}), 401
-		
 		try:
 			data = jwt.decode(token, app.config['SECRET_KEY'])
 			cur.execute(f"SELECT * FROM user_data WHERE user_data.userid = '{data['public_id']}'")
@@ -124,7 +121,7 @@ def sign_in_authentication():
 		token = jwt.encode({'public_id':str(user[0]), 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
 
 		return jsonify({'token': token.decode('UTF-8')})
-		
+
 	return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!!!"'})
 
 @app.route('/signup', methods=['POST'])
