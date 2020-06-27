@@ -1,4 +1,5 @@
 import ShopActionTypes from './shop.types';
+import { remapCollection } from './shop.util';
 
 const fetchCollectionsStart = () => ({
     type: ShopActionTypes.FETCH_COLLECTIONS_START,
@@ -17,7 +18,7 @@ const fetchCollectionsFailure = errorMsg => ({
 export const fetchCollectionsStartAsync = (query) => {
     const str = query.replace(" ", "%")
     const apiKey = process.env.REACT_APP_API_KEY;
-    
+
     return async dispatch => {
         dispatch(fetchCollectionsStart())
         try {
@@ -48,11 +49,9 @@ export const fetchCollectionsStartAsync = (query) => {
                 }
             });
 
-            collectionResult.json().then(
-                data => {
-                    dispatch(fetchCollectionsSuccess(data));
-                })
-        } catch(error) {
+            let newData = await collectionResult.json().then(data => remapCollection(data));
+            dispatch(fetchCollectionsSuccess(newData))
+        } catch (error) {
             dispatch(fetchCollectionsFailure(error.message));
         }
     }

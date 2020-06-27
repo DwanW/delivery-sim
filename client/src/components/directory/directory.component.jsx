@@ -9,7 +9,7 @@ const Directory = ({ collections }) => {
     return (
         <div className="directoryContainer">
             {
-               collections && collections.best_rated_restaurant.filter((e,idx)=> idx <5).map(({restaurant: {id, ...otherProps}}) => 
+               collections && collections.best_rated_restaurant.filter((e,idx)=> idx <6).map(({id, ...otherProps}) =>
                 <MenuItem key={id} id={id} {...otherProps}/>
                 )
             }
