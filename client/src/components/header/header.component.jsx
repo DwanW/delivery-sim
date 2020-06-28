@@ -7,9 +7,10 @@ import './header.styles.scss';
 
 import {signOut} from '../../redux/user/user.actions'
 import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
 
-const Header = ({ currentUser, signOutCurrentUser }) => (
+const Header = ({ currentUser, signOutCurrentUser, hidden }) => (
     <div className='headerContainer'>
         <Link className='logoContainer' to='/' >
             <Logo />
@@ -22,12 +23,16 @@ const Header = ({ currentUser, signOutCurrentUser }) => (
                 <Link className='optionLink' to='/signin'>Sign In</Link>
             }
             <CartIcon />
+            {
+                hidden ? null: <CartDropdown />
+            }
         </div>
     </div >
 )
 
 const mapStateToProps = (state) => ({
-    currentUser: state.user.currentUser
+    currentUser: state.user.currentUser,
+    hidden: state.cart.hidden
 })
 
 const mapDispatchToProps = (dispatch) => ({
