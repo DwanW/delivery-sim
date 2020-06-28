@@ -23,4 +23,4 @@ const mapStateToProps = (state, ownProps) => ({
     collections: convertListToMap(state.shop.collections.best_rated_restaurant)[ownProps.match.params.shopId]
 })
 
-export default connect(mapStateToProps)(FoodCollection)
+export default connect(mapStateToProps)(FoodCollection);
