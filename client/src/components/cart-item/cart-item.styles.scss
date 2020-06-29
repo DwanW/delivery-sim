@@ -4,8 +4,10 @@
     height: 80px;
     margin-bottom: 15px;
 
-    img {
+    .img {
         width: 30%;
+        background-size: cover;
+        background-position: center;
     }
     .itemDetailsContainer{
         width: 70%;
