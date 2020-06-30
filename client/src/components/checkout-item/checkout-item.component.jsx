@@ -10,19 +10,19 @@ import {
 import './checkout-item.styles.scss';
 
 const CheckoutItem = ({ cartItem, clearItem, add, remove }) => {
-  const { name, imageUrl, price, quantity } = cartItem;
+  const { ItemName, ImgUrl, Price, quantity } = cartItem;
   return (
     <div className='checkoutItemContainer'>
       <div className='imageContainer'>
-        <img src={imageUrl} alt='item' />
+        <img src={ImgUrl} alt='item' />
       </div>
-      <span className='textContainer'>{name}</span>
+      <span className='textContainer'>{ItemName}</span>
       <div className="quantityContainer">
         <div onClick={() => remove(cartItem)}>&#10094;</div>
         <span>{quantity}</span>
         <div onClick={() => add(cartItem)}>&#10095;</div>
       </div>
-      <span className='textContainer'>{price}</span>
+      <span className='textContainer'>{Price}</span>
       <div className='removeButtonContainer' onClick={() => clearItem(cartItem)}>
         &#10005;
       </div>

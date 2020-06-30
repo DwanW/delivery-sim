@@ -26,7 +26,7 @@ export const CheckoutPage = ({ cartItems, cartTotal }) => (
         </div>
         {
             cartItems.map(cartItem =>
-                <CheckoutItem key={cartItem.id} cartItem={cartItem} />
+                <CheckoutItem key={cartItem.ItemID} cartItem={cartItem} />
             )
         }
         <div className='totalContainer'>
@@ -38,7 +38,7 @@ export const CheckoutPage = ({ cartItems, cartTotal }) => (
 
 const mapStateToProps = state => ({
     cartItems: state.cart.cartItems,
-    cartTotal: state.cart.cartItems.reduce((acc, itemObj) => acc + itemObj.quantity * itemObj.Price, 0)
+    cartTotal: state.cart.cartItems.reduce((acc, itemObj) => acc + itemObj.quantity * itemObj.Price, 0).toFixed(2)
 });
 
 export default connect(mapStateToProps)(CheckoutPage);
