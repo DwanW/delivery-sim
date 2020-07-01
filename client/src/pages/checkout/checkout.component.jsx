@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import CheckoutItem from '../../components/checkout-item/checkout-item.component';
+import DeliveryInfo from '../../components/delivery-info/delivery-info.component';
 
 import './checkout.styles.scss';
 

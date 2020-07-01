@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './delivery-info.styles.scss';
 
@@ -7,36 +7,36 @@ import FormInput from '../form-input/form-input';
 import { connect } from 'react-redux';
 
 const DeliveryInfo = () => {
-    const [deliveryInfo, setDeliveryInfo] = useState({ address:'', schedule:{} });
+    const [deliveryInfo, setDeliveryInfo] = useState({ address: '', schedule: {} });
 
-    const {address, schedule} = deliveryInfo;
+    const { address, schedule } = deliveryInfo;
 
     const handleSubmit = async event => {
         event.preventDefault();
-        fetchUser(username, password);
+        console.log('saved')
     }
 
     const handleChange = event => {
         const { value, name } = event.target;
-        setCredentials({ ...userCredentials, [name]: value })
+        setDeliveryInfo({ ...deliveryInfo, [name]: value })
     }
 
     return (
         <div className="deliveryInfoContainer">
             <h2 className="deliveryInfoTitle">Review & Edit Delivery Info</h2>
-            <span>Sign in with Username and Password</span>
+            <span>Schedule your Delivery</span>
             <form onSubmit={handleSubmit}>
-                <FormInput name='address' type='address' label='Enter Delivery Address' value={username} handleChange={handleChange} />
+                <FormInput name='address' type='address' label='Enter Delivery Address' value={address} handleChange={handleChange} />
                 <FormInput
-                    name='password'
-                    type='password'
-                    label='Password'
-                    value={password}
+                    name='schedule'
+                    type='date'
+                    label=''
+                    value={schedule}
                     handleChange={handleChange}
                     required
                 />
-                <div className="signInButtons">
-                    <CustomButton type="submit">Sign In</CustomButton >
+                <div className="deliveryInfoSaveButtons">
+                    <button type="submit">Save</button >
                 </div>
             </form>
         </div>
@@ -44,7 +44,7 @@ const DeliveryInfo = () => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    fetchUser: (username,password) => dispatch(signInStartAsync(username,password))
+    fetchUser: (e) => e
 });
 
-export default connect(null,mapDispatchToProps)(DeliveryInfo);
+export default connect(null, mapDispatchToProps)(DeliveryInfo);
