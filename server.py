@@ -9,12 +9,6 @@ from werkzeug.security import generate_password_hash, check_password_hash,safe_s
 import datetime
 from functools import wraps
 
-# What the server does for this application:
-# giving invoice ID: grab invoice information from each table and put data in a dictionary
-# for sign in, sending username and hashed password: find if credential matches, if true return authenticated, else failed to authenticate
-# for sign up, sending username and hashed password: find if username exist, if true return failed to sign up, else write to database user table
-# Done :) giving category list, if match to category table exist return items as a dictionaries inside list, else return the category other
-# giving item ID,
 app = Flask(__name__)
 CORS(app)
 
@@ -80,10 +74,10 @@ def get_menu_list():
 
 # crud user table
 
+# create user with auth token
 @app.route('/user', methods=['POST'])
 @token_required
 def create_user(current_user):
-	print(current_user)
 	req_json = request.get_json()
 	username = req_json['username']
 	email = req_json['email']
@@ -111,7 +105,7 @@ def sign_in_authentication():
 	if not auth or not auth.username or not auth.password:
 		return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!!!"'})
 
-	cur.execute(f"SELECT * FROM user_data WHERE user_data.username = '{auth.username}'")
+	cur.execute(f"SELECT * FROM user_data WHERE user_data.username = '{auth.username}';")
 	user = cur.fetchone()
 	
 	if not user:
@@ -140,6 +134,67 @@ def sign_up_check():
 	cur.execute("INSERT INTO user_data (userid, username, email, password, date_joined) VALUES (%s,%s,%s,%s,%s)", (uuid.uuid4(), username, email, hashed_password, current_time))
 	conn.commit()
 	return jsonify({"message":"successfully created user"})
+
+
+# invoice operation
+def convert_schedule_to_string(schedule):
+	if type(schedule) == str :
+		return schedule
+	else:
+		initial_schedule = ['0','0','0','0','0','0','0']
+		idx = 0
+		for day in schedule:
+			arr = schedule[day]
+			if arr[0] == 1 and arr[1] == 1:
+				initial_schedule[idx] = '3'
+				idx+=1
+			elif arr[0] == 1:
+				initial_schedule[idx] = '1'
+				idx+=1
+			elif arr[1] == 1:
+				initial_schedule[idx] = '2'
+				idx+=1
+			else:
+				idx+=1
+
+		return "".join(initial_schedule)
+
+# create invoice record on checkout
+@app.route('/checkout', methods=['POST'])
+@token_required
+def process_check_out(current_user):
+	req_json = request.get_json()
+	cartItems = req_json['cartItems']
+	deliveryInfo = req_json['deliveryInfo']
+
+	current_user_id = current_user[0]
+	invoiceId = uuid.uuid4()
+	current_time = datetime.datetime.utcnow()
+	schedule = convert_schedule_to_string(deliveryInfo['schedule'])
+	try:
+		for item in cartItems:
+			item_id = item['ItemID']
+			quantity = item['quantity']
+			line_id = uuid.uuid4()
+			cur.execute("INSERT INTO invoice_list (line_id, item_id, invoice_id, quantity) VALUES (%s,%s,%s,%s)", (line_id, item_id, invoiceId, quantity))
+		cur.execute("INSERT INTO invoice (invoice_id, customer_id, date_issued, schedule, delivery_address) VALUES (%s,%s,%s,%s,%s)", (invoiceId, current_user_id, current_time, schedule, deliveryInfo['address']))
+		conn.commit()
+		return jsonify({'message' : "Checkout complete, invoice created"}), 200
+	except:
+		return jsonify({'message' : 'an error has occurred'}), 500
+
+# utility route for deleting invoice by its uuid
+@app.route('/invoice', methods=['DELETE'])
+def delete_invoice_record():
+	req_json = request.get_json()
+	invoice_id = req_json['invoice_id']
+	try:
+		cur.execute(f"DELETE FROM invoice WHERE invoice_id = '{invoice_id}'")
+		cur.execute(f"DELETE FROM invoice_list WHERE invoice_id = '{invoice_id}'")
+		conn.commit()
+		return jsonify({'message' : 'invoice and its related record has been deleted successfully'}), 200
+	except:
+		return jsonify({'message' : 'invoice and its related record has been deleted successfully'}), 500
 
 @atexit.register
 def close_db_connection():

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import './delivery-info.styles.scss';
 
+import {connect} from 'react-redux';
 import DaySelector from '../day-selector/day-selector.component';
 
 const INITIAL_SCHEDULE = {
@@ -14,7 +15,7 @@ const INITIAL_SCHEDULE = {
     Saturday: [0, 0]
 };
 
-const DeliveryInfo = ({cartItems}) => {
+const DeliveryInfo = ({cartItems, token}) => {
     const [deliveryInfo, setDeliveryInfo] = useState({ address: '', schedule: '' });
 
     const { address, schedule } = deliveryInfo;
@@ -54,8 +55,23 @@ const DeliveryInfo = ({cartItems}) => {
         }
     }
 
-    const handleCheckout = () => {
-        console.log(cartItems, deliveryInfo)
+    const handleCheckout = async () => {
+        let checkoutInfo = {cartItems:cartItems, deliveryInfo:deliveryInfo,}
+
+        let requestOptions = {
+            method: 'POST',
+            headers: {'x-access-token': token, 'Content-Type': 'application/json'},
+            redirect: 'follow',
+            body: JSON.stringify(checkoutInfo)
+        };
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/checkout", requestOptions);
+            let data = response.json().then(data => console.log(data))
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -98,4 +114,8 @@ const DeliveryInfo = ({cartItems}) => {
     )
 }
 
-export default DeliveryInfo;
+const mapStateToProps = state => ({
+    token: state.user.token
+})
+
+export default connect(mapStateToProps)(DeliveryInfo);
