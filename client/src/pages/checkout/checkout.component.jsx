@@ -34,8 +34,7 @@ export const CheckoutPage = ({ cartItems, cartTotal }) => (
             <span> TOTAL: ${cartTotal}</span>
         </div>
         <button className='toggleDeliveryContainerButton'>Review&Edit Delivery Address</button>
-        <DeliveryInfo />
-        <button className='checkoutButton'>CHECK OUT</button>
+        <DeliveryInfo cartItems={cartItems} />
     </div>
 );
 
