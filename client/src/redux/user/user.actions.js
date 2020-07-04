@@ -76,10 +76,36 @@ export const signUpStartAsync = (username, email, password) => {
             if(response.status === 200){
                 dispatch(signInStartAsync(username, password))
             } else {
-                dispatch(signUpFailure("could not sign up"));
+                dispatch(signUpFailure("sign up failed"));
             }
         } catch (error) {
             dispatch(signUpFailure("could not sign up"));
+        }
+    }
+}
+
+export const checkUserTokenAsync = (token) => {
+    return async dispatch => {
+        if(!token){
+            console.log("not sign in yet")
+            return;
+        }
+
+        let requestOptions = {
+            method: 'GET',
+            headers: {'x-access-token': token, 'Content-Type': 'application/json'},
+            redirect: 'follow',
+        };
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/user", requestOptions);
+            let respData = await response.json().then(data => data)
+            console.log(respData)
+            if(response.status !== 200){
+                dispatch(signOut());
+            }
+        } catch (error) {
+            dispatch(signOut());
         }
     }
 }

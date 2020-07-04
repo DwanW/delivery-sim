@@ -67,7 +67,7 @@ const DeliveryInfo = ({cartItems, token}) => {
 
         try {
             const response = await fetch("http://127.0.0.1:5000/checkout", requestOptions);
-            let data = response.json().then(data => console.log(data))
+            response.json().then(data => console.log(data))
 
         } catch (error) {
             console.log(error)

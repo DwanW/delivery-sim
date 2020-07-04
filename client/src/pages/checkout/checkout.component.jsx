@@ -5,8 +5,15 @@ import CheckoutItem from '../../components/checkout-item/checkout-item.component
 import DeliveryInfo from '../../components/delivery-info/delivery-info.component';
 
 import './checkout.styles.scss';
+import { useEffect } from 'react';
+import { checkUserTokenAsync } from '../../redux/user/user.actions';
 
-export const CheckoutPage = ({ cartItems, cartTotal }) => (
+export const CheckoutPage = ({ cartItems, cartTotal, token, checkUserToken }) => {
+    useEffect(()=> {
+        checkUserToken(token);
+    }, [checkUserToken, token])
+    
+    return (
     <div className="checkoutPageContainer">
         <div className='checkoutHeaderContainer'>
             <div className='headerBlock'>
@@ -36,11 +43,16 @@ export const CheckoutPage = ({ cartItems, cartTotal }) => (
         <button className='toggleDeliveryContainerButton'>Review&Edit Delivery Address</button>
         <DeliveryInfo cartItems={cartItems} />
     </div>
-);
+)};
+
+const mapDispatchToProps = dispatch => ({
+    checkUserToken: (token) => dispatch(checkUserTokenAsync(token))
+})
 
 const mapStateToProps = state => ({
+    token: state.user.token,
     cartItems: state.cart.cartItems,
     cartTotal: state.cart.cartItems.reduce((acc, itemObj) => acc + itemObj.quantity * itemObj.Price, 0).toFixed(2)
 });
 
-export default connect(mapStateToProps)(CheckoutPage);
+export default connect(mapStateToProps,mapDispatchToProps)(CheckoutPage);
