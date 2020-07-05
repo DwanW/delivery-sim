@@ -45,6 +45,7 @@ def token_required(f):
 
 	return decorated
 
+# convert menu list to dictionary(utility function)
 def get_cuisine_menu(clist, dataDict):
 	cuisineName = "Other"
 	categoryID = dataDict[cuisineName]
@@ -129,7 +130,7 @@ def sign_in_authentication():
 		return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!!!"'})
 
 	if check_password_hash(user[3], auth.password):
-		token = jwt.encode({'public_id':str(user[0]), 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=1)}, app.config['SECRET_KEY'])
+		token = jwt.encode({'public_id':str(user[0]), 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=45)}, app.config['SECRET_KEY'])
 		return jsonify({'token': token.decode('UTF-8')})
 
 	return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!!!"'})
@@ -152,7 +153,7 @@ def sign_up_check():
 	return jsonify({"message":"successfully created user"})
 
 
-# invoice operation
+# invoice operation (utility function)
 def convert_schedule_to_string(schedule):
 	if type(schedule) == str :
 		return schedule
@@ -198,6 +199,28 @@ def process_check_out(current_user):
 		return jsonify({'message' : "Checkout complete, invoice created"}), 200
 	except:
 		return jsonify({'message' : 'an error has occurred'}), 500
+
+# convert invoice list to dictionary (utility function)
+def convert_invoice_list_to_dict(invoice_list):
+	invoice_dict = {}
+	for invoice_line in invoice_list:
+		invoice
+	pass
+# get invoices for a specific user
+@app.route('/userinvoice', methods=['GET'])
+@token_required
+def get_all_invoice(current_user):
+	current_user_id = current_user[0]
+	print(current_user_id)
+	# try:
+	sql = f'SELECT invoice.invoice_id, invoice.date_issued, invoice.schedule, invoice.delivery_address, invoice_list.quantity, item."ItemName", item."Price", item."Description" FROM invoice JOIN invoice_list ON invoice.invoice_id = invoice_list.invoice_id JOIN item on invoice_list.item_id = item."ItemID" WHERE customer_id = \'{current_user_id}\';'
+	cur.execute(sql)
+	invoice_list = cur.fetchall()
+	print(invoice_list)
+	return jsonify("it worked"), 200
+	# except:
+	# 	return jsonify({'message' : 'an error has occurred'}), 500
+
 
 # utility route for deleting invoice by its uuid
 @app.route('/invoice', methods=['DELETE'])

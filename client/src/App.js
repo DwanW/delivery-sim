@@ -9,6 +9,7 @@ import ShopPage from './pages/shop/shop-page.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import CheckoutPage from './pages/checkout/checkout.component';
+import InvoicePage from './pages/user-invoice/user-invoice.component';
 
 const App = ({currentCollection, currentUser}) => {
   return (
@@ -19,6 +20,7 @@ const App = ({currentCollection, currentUser}) => {
         <Route exact path='/signin' render={()=> currentUser? (<Redirect to='/'/> ): <SignInAndSignUpPage />} />
         <Route path='/shop' component={ShopPage} />
         <Route exact path='/checkout' component={CheckoutPage} />
+        <Route exact path='/myacc' component={InvoicePage} />
       </Switch>
     </div>
   );

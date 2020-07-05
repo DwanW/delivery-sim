@@ -109,3 +109,40 @@ export const checkUserTokenAsync = (token) => {
         }
     }
 }
+
+export const fetchInvoiceStart = () => ({
+    type: UserActionTypes.FETCH_INVOICE_START,
+})
+
+export const fetchInvoiceFailure = (error) => ({
+    type: UserActionTypes.FETCH_INVOICE_FAILURE,
+    payload: error
+})
+
+export const fetchInvoiceSuccess = (invoices) => ({
+    type: UserActionTypes.FETCH_INVOICE_SUCCESS,
+    payload: invoices
+})
+
+export const fetchUserInvoiceStartAsync = (token) => {
+    return async dispatch => {
+        dispatch(fetchInvoiceStart())
+
+        let requestOptions = {
+            method: 'GET',
+            headers: {'x-access-token': token, 'Content-Type': 'application/json'},
+            redirect: 'follow',
+        };
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/userinvoice", requestOptions);
+            let respData = await response.json().then(data => data)
+            console.log(respData)
+            // if(response.status !== 200){
+            //     dispatch(signOut());
+            // }
+        } catch (error) {
+            // dispatch(signOut());
+        }
+    }
+}

@@ -4,13 +4,15 @@ const INITIAL_STATE = {
     currentUser: null,
     isAuthenticating:false,
     token: null,
-    error: null
+    error: null,
+    invoices: null
 }
 
 const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case UserActionTypes.SIGN_IN_START:
         case UserActionTypes.SIGN_UP_START:
+        case UserActionTypes.FETCH_INVOICE_START:
             return {
                 ...state,
                 isAuthenticating:true
@@ -23,8 +25,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 isAuthenticating:false,
                 error: null
             }
+        case UserActionTypes.FETCH_INVOICE_SUCCESS:
+            return {
+                ...state,
+                invoices: action.payload
+            }
         case UserActionTypes.SIGN_IN_FAILURE:
         case UserActionTypes.SIGN_UP_FAILURE:
+        case UserActionTypes.FETCH_INVOICE_FAILURE:
             return {
                 ...state,
                 isAuthenticating:false,
@@ -35,7 +43,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 currentUser: null,
                 error: null,
-                token: null
+                token: null,
+                invoice: null,
             }
         default:
             return state;

@@ -18,6 +18,9 @@ const Header = ({ currentUser, signOutCurrentUser, hidden }) => (
         <div className='optionContainer'>
             <Link className='optionLink' to='/'>Home</Link>
             {
+                currentUser ? <Link className='optionLink' to='/myacc'>My Account</Link> : null
+            }
+            {
                 currentUser ? <div className='optionLink' onClick={signOutCurrentUser}>Sign Out</div> :
                 <Link className='optionLink' to='/signin'>Sign In</Link>
             }
