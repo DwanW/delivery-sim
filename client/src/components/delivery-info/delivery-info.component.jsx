@@ -4,6 +4,7 @@ import './delivery-info.styles.scss';
 
 import {connect} from 'react-redux';
 import DaySelector from '../day-selector/day-selector.component';
+import {clearCart} from '../../redux/cart/cart.actions';
 
 const INITIAL_SCHEDULE = {
     Sunday: [0, 0],
@@ -15,7 +16,7 @@ const INITIAL_SCHEDULE = {
     Saturday: [0, 0]
 };
 
-const DeliveryInfo = ({cartItems, token}) => {
+const DeliveryInfo = ({cartItems, token, clearOnCheckout}) => {
     const [deliveryInfo, setDeliveryInfo] = useState({ address: '', schedule: '' });
 
     const { address, schedule } = deliveryInfo;
@@ -68,7 +69,7 @@ const DeliveryInfo = ({cartItems, token}) => {
         try {
             const response = await fetch("http://127.0.0.1:5000/checkout", requestOptions);
             response.json().then(data => console.log(data))
-
+            clearOnCheckout()
         } catch (error) {
             console.log(error)
         }
@@ -118,4 +119,8 @@ const mapStateToProps = state => ({
     token: state.user.token
 })
 
-export default connect(mapStateToProps)(DeliveryInfo);
+const mapDispatchToProps = dispatch => ({
+    clearOnCheckout: () => dispatch(clearCart())
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(DeliveryInfo);

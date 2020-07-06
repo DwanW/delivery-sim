@@ -201,25 +201,43 @@ def process_check_out(current_user):
 		return jsonify({'message' : 'an error has occurred'}), 500
 
 # convert invoice list to dictionary (utility function)
-def convert_invoice_list_to_dict(invoice_list):
-	invoice_dict = {}
+def convert_invoice_line_to_obj(invoice_list):
+	invoices = []
+	invoice_id_list = []
 	for invoice_line in invoice_list:
-		invoice
-	pass
+		invoice_id = invoice_line[0]
+		date_issued = invoice_line[1]
+		schedule = invoice_line[2]
+		address =  invoice_line[3]
+		quantity = invoice_line[4]
+		item_name = invoice_line[5]
+		item_price = float(invoice_line[6])
+
+		if str(invoice_id) in invoice_id_list:
+			idx = invoice_id_list.index(str(invoice_id))
+			invoices[idx]["items"].append({"item_name": item_name, "item_price": item_price, "quantity": quantity})
+		else:
+			invoice_id_list.append(str(invoice_id))
+			invoices.append({"invoice_id": invoice_id, "date_issued": date_issued, "schedule": schedule, "items":[{"item_name": item_name, "item_price": item_price, "quantity": quantity}]})
+	return invoices
+
 # get invoices for a specific user
 @app.route('/userinvoice', methods=['GET'])
 @token_required
 def get_all_invoice(current_user):
 	current_user_id = current_user[0]
-	print(current_user_id)
-	# try:
-	sql = f'SELECT invoice.invoice_id, invoice.date_issued, invoice.schedule, invoice.delivery_address, invoice_list.quantity, item."ItemName", item."Price", item."Description" FROM invoice JOIN invoice_list ON invoice.invoice_id = invoice_list.invoice_id JOIN item on invoice_list.item_id = item."ItemID" WHERE customer_id = \'{current_user_id}\';'
-	cur.execute(sql)
-	invoice_list = cur.fetchall()
-	print(invoice_list)
-	return jsonify("it worked"), 200
-	# except:
-	# 	return jsonify({'message' : 'an error has occurred'}), 500
+	try:
+		sql = f'SELECT invoice.invoice_id, invoice.date_issued, invoice.schedule, invoice.delivery_address, invoice_list.quantity, item."ItemName", item."Price" FROM invoice JOIN invoice_list ON invoice.invoice_id = invoice_list.invoice_id JOIN item on invoice_list.item_id = item."ItemID" WHERE customer_id = \'{current_user_id}\' ORDER BY invoice.date_issued DESC'
+		cur.execute(sql)
+		invoice_list = cur.fetchall()
+		if not invoice_list:
+			print(invoice_list)
+			return jsonify(invoice_list), 200
+
+		invoices = convert_invoice_line_to_obj(invoice_list)
+		return jsonify(invoices), 200
+	except:
+		return jsonify({'message' : 'failed fetching invoice'}), 500
 
 
 # utility route for deleting invoice by its uuid

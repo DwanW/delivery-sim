@@ -137,12 +137,14 @@ export const fetchUserInvoiceStartAsync = (token) => {
         try {
             const response = await fetch("http://127.0.0.1:5000/userinvoice", requestOptions);
             let respData = await response.json().then(data => data)
-            console.log(respData)
-            // if(response.status !== 200){
-            //     dispatch(signOut());
-            // }
+            console.log(response.status)
+            if(response.status === 200){
+                dispatch(fetchInvoiceSuccess(respData));
+            } else{
+                throw new Error("need sign in")
+            }
         } catch (error) {
-            // dispatch(signOut());
+            dispatch(fetchInvoiceFailure(error));
         }
     }
 }

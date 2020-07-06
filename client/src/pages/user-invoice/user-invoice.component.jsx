@@ -5,7 +5,9 @@ import './user-invoice.styles.scss';
 import { useEffect } from 'react';
 import { checkUserTokenAsync, fetchUserInvoiceStartAsync } from '../../redux/user/user.actions';
 
-export const InvoicePage = ({ token, checkUserToken, fetchUserInvoice }) => {
+import InvoiceItem from '../../components/invoice-item/invoice-item.component';
+
+export const InvoicePage = ({ token, checkUserToken, fetchUserInvoice, invoices}) => {
     useEffect(()=> {
         checkUserToken(token);
     }, [checkUserToken, token])
@@ -14,6 +16,13 @@ export const InvoicePage = ({ token, checkUserToken, fetchUserInvoice }) => {
     <div className="invoicePageContainer">
        <h3> View Invoices </h3>
        <button onClick={()=>fetchUserInvoice(token)}>DO IT</button>
+       <div className="invoiceListContainer">
+        { 
+           invoices && invoices.map((item,idx) => 
+           <InvoiceItem key={idx} item={item}/>
+            )
+        }
+       </div>
     </div>
 )};
 
@@ -24,6 +33,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
     token: state.user.token,
+    invoices: state.user.invoices
 });
 
 export default connect(mapStateToProps,mapDispatchToProps)(InvoicePage);

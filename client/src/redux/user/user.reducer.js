@@ -28,7 +28,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
         case UserActionTypes.FETCH_INVOICE_SUCCESS:
             return {
                 ...state,
-                invoices: action.payload
+                isAuthenticating:false,
+                invoices: action.payload,
+                error: null
             }
         case UserActionTypes.SIGN_IN_FAILURE:
         case UserActionTypes.SIGN_UP_FAILURE:
@@ -44,7 +46,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 currentUser: null,
                 error: null,
                 token: null,
-                invoice: null,
+                invoices: null,
             }
         default:
             return state;
