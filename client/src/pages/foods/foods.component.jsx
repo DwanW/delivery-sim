@@ -11,7 +11,6 @@ export const FoodCollection = ({collections}) => {
     return (
         <div className='foodCollectionPage'>
             <div className="restaurant-title">{collections.name}</div>
-            <div>User_Rating: {collections.user_rating.aggregate_rating}, {collections.user_rating.rating_text}</div>
             <div className='foodCollectionContainer'>
             {
                 collections && collections.cuisine_menu.menu.map((item) =>

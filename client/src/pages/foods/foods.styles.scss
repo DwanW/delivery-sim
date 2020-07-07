@@ -1,4 +1,24 @@
-.foodCollectionContainer{
-    display:flex;
-    flex-wrap: wrap;
+.foodCollectionPage {
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    border-radius: 5px;
+        
+    .restaurant-title {
+        font-weight: 300;
+        margin-bottom: 6px;
+        font-size: 32px;
+        color: white;
+        background-color: orange;
+        border-radius: 7px;
+        padding: 5px 10px
+    }
+
+    .foodCollectionContainer{
+        display:flex;
+        flex-wrap: wrap;
+    }
 }
