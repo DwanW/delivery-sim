@@ -28,7 +28,7 @@ const CartDropdown = ({ cartItems, history, dispatch }) => {
             }}
         >
             GO TO CHECKOUT
-    </button>
+        </button>
     </div>
 )};
 

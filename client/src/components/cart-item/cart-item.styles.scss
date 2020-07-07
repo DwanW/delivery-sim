@@ -3,9 +3,11 @@
     display: flex;
     height: 80px;
     margin-bottom: 15px;
+    background-color: rgba(250, 216, 154, 0.918);
 
     .img {
         width: 30%;
+        height: 80px;
         background-size: cover;
         background-position: center;
     }
@@ -16,5 +18,10 @@
         align-items: flex-start;
         justify-content: center;
         padding: 10px 20px;
+
+        & span {
+            font-weight: 300;
+            margin-bottom: 5px
+        }
     }
 }
