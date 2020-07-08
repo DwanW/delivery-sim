@@ -13,8 +13,7 @@ const CheckoutItem = ({ cartItem, clearItem, add, remove }) => {
   const { ItemName, ImgUrl, Price, quantity } = cartItem;
   return (
     <div className='checkoutItemContainer'>
-      <div className='imageContainer'>
-        <img src={ImgUrl} alt='item' />
+      <div className='imageContainer' style={{backgroundImage: `url(${ImgUrl})`}}>
       </div>
       <span className='textContainer'>{ItemName}</span>
       <div className="quantityContainer">

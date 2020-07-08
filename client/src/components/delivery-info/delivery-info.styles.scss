@@ -1,0 +1,62 @@
+.deliveryInfoContainer{
+    width: 100%;
+    margin-top: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &::before {
+        content:'';
+        height: 800px;
+        background-color: orange;
+        position: absolute;
+        z-index: -1;
+        left: 0;
+        right: 0;
+    }
+
+    .deliveryInfoTitle {
+        margin: 50px 0;
+        color: white;
+        font-size: 35px;
+        
+        &::before {
+            content:'';
+            height: 1px;
+            background-color: white;
+            position: absolute;
+            z-index: -1;
+            left: 0;
+            right: 0;
+            transform: translateY(60px)
+        }
+    }
+
+    .addressSection {
+        width: 100%;
+
+        & div{
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        & input[type=text] {
+            background-color: orange;
+            border-bottom: grey solid 1px;
+            width: 50%;
+            margin: 20px 0;
+            font-size: 20px;
+
+            &:focus{
+                outline: none;
+                border-color: white
+            }
+        }
+    }
+
+    .scheduleSection {
+        width: 100%;
+    }
+
+}

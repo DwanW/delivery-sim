@@ -40,7 +40,6 @@ export const CheckoutPage = ({ cartItems, cartTotal, token, checkUserToken }) =>
         <div className='totalContainer'>
             <span> TOTAL: ${cartTotal}</span>
         </div>
-        <button className='toggleDeliveryContainerButton'>Review&Edit Delivery Address</button>
         <DeliveryInfo cartItems={cartItems} />
     </div>
 )};
