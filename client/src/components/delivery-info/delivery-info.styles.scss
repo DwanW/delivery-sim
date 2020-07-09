@@ -57,6 +57,55 @@
 
     .scheduleSection {
         width: 100%;
+        margin: 50px 0;
+
+        .scheduleTitle{
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .defaultContainer{
+            margin: 20px 0;
+        }
+    }
+}
+
+.customRadio {
+    position: relative;
+
+    input[type="radio"]{
+        opacity:0;
     }
 
+    & label {
+        padding-left: 10px
+    }
+
+    & label::before{
+        content: "";
+        display: inline-block;
+        height: 16px;
+        width: 16px;
+        background-color: white;
+        position: absolute;
+        left: 4px;
+    }
+    & label::after{
+        content: "";
+        display: inline-block;
+        height: 12px;
+        width: 12px;
+        background-color:orange;
+        position: absolute;
+        left: 6px;
+        top: 2px;
+    }
+    input[type="radio"] + label::after {
+        content: none;
+    }
+    input[type="radio"]:checked + label::after {
+        content: "";
+    }
 }

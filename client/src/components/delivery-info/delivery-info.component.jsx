@@ -83,10 +83,14 @@ const DeliveryInfo = ({ cartItems, token, clearOnCheckout }) => {
                 <input name='address' type='text' placeholder='Enter Delivery Address' value={address} onChange={handleChange} autoComplete="off"/>
             </div>
             <div className='scheduleSection'>
-                <span>Pick Options for delivery</span>
+                <div className='scheduleTitle'>Pick Options for delivery</div>
                 <div className='defaultContainer'>
-                    <input type='radio' name="deliveryOption" className='deliveryOption' id="default" checked={scheduleDisabled} onChange={toggleOption} />
-                Default:
+                    <div className="customRadio">
+                        
+                        <input type='radio' name="deliveryOption" className='deliveryOption' id="default" checked={scheduleDisabled} onChange={toggleOption} />
+                        <label htmlFor="default">Default:
+                        </label>
+                    </div>
                 <h3>Delivery will be on {getFutureDateFromToday(1).toISOString().split("T")[0]}</h3>
                     <div>
                         <input type='radio' name="schedule" value={0} onChange={handleChange} disabled={!scheduleDisabled} />
