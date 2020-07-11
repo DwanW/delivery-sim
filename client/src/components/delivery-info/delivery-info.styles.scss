@@ -7,8 +7,8 @@
 
     &::before {
         content:'';
-        height: 800px;
-        background-color: orange;
+        height: 1100px;
+        background:linear-gradient(to bottom, orange 10%, rgb(255, 211, 129) 10%);
         position: absolute;
         z-index: -1;
         left: 0;
@@ -36,21 +36,24 @@
         width: 100%;
 
         & div{
-            color: white;
+            color: black;
             font-size: 20px;
             font-weight: 600;
         }
 
         & input[type=text] {
-            background-color: orange;
-            border-bottom: grey solid 1px;
+            background-color: rgb(243, 222, 183);
+            padding: 5px 4px;
             width: 50%;
             margin: 20px 0;
             font-size: 20px;
+            border: 1px solid rgb(255, 211, 129);
+            transition: 0.4s ease;
 
             &:focus{
                 outline: none;
-                border-color: white
+                border-color: orange;
+                width: 70%
             }
         }
     }
@@ -60,7 +63,7 @@
         margin: 50px 0;
 
         .scheduleTitle{
-            color: white;
+            color: black;
             font-size: 20px;
             font-weight: 600;
             text-transform: capitalize;
@@ -74,38 +77,61 @@
 
 .customRadio {
     position: relative;
+    padding: 15px 0px;
 
     input[type="radio"]{
         opacity:0;
     }
 
     & label {
-        padding-left: 10px
+        padding-left: 25px;
+        font-size: 18px;
     }
 
     & label::before{
         content: "";
         display: inline-block;
-        height: 16px;
-        width: 16px;
+        height: 30px;
+        width: 30px;
         background-color: white;
+        border: 2px solid orange;
         position: absolute;
-        left: 4px;
+        left: 0px;
+        top: 7.5px;
+        border-radius: 50%;
     }
     & label::after{
         content: "";
         display: inline-block;
-        height: 12px;
-        width: 12px;
+        height: 20px;
+        width: 20px;
         background-color:orange;
         position: absolute;
-        left: 6px;
-        top: 2px;
+        left: 7px;
+        top: 14.5px;
+        border-radius: 50%;
+        transform-origin: center;
+        transform:scale(1);
+        transition:0.3s;
     }
     input[type="radio"] + label::after {
-        content: none;
+        transform:scale(0)
     }
     input[type="radio"]:checked + label::after {
-        content: "";
+        transform:scale(1)
+    }
+}
+
+.optionBox {
+    padding: 15px 25px;
+    background: white;
+    border-left: solid 10px orange
+}
+
+.radioContainer{
+    padding: 15px 25px;
+
+    & input {
+        margin-right: 10px;
     }
 }

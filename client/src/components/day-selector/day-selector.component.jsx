@@ -3,7 +3,6 @@ import React from 'react';
 import './day-selector.styles.scss';
 
 const DaySelector = ({handleScheduleDate, scheduleDisabled, day}) => (
-    <div className="scheduledContainer">
         <div className="dayContainer">
             <h3>{day}</h3>
             <div>
@@ -11,7 +10,6 @@ const DaySelector = ({handleScheduleDate, scheduleDisabled, day}) => (
                 <input type='checkbox' name={day} value={1} onChange={handleScheduleDate} disabled={scheduleDisabled}/> Evening
             </div>
         </div>
-    </div>
 )
 
 export default DaySelector;
