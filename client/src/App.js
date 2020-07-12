@@ -20,7 +20,7 @@ const App = ({currentCollection, currentUser}) => {
         <Route exact path='/signin' render={()=> currentUser? (<Redirect to='/'/> ): <SignInAndSignUpPage />} />
         <Route path='/shop' component={ShopPage} />
         <Route exact path='/checkout' component={CheckoutPage} />
-        <Route exact path='/myacc' component={InvoicePage} />
+        <Route exact path='/myacc' render={()=> currentUser? <InvoicePage />:(<Redirect to='/signin'/> )} />
       </Switch>
     </div>
   );

@@ -7,7 +7,7 @@ const InvoiceItem = ({item}) => {
     const invoiceDate = new Date(date_issued).toDateString();
     return (
     <div className='invoiceItemContainer'>
-      <div>Invoice#: {invoice_id}</div>
+      <div className='invoiceTitle'>Invoice#: {invoice_id}</div>
       <div className='itemDetailsContainer'>
         <span>{invoiceDate}</span>
         <span>

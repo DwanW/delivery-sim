@@ -10,12 +10,14 @@ import InvoiceItem from '../../components/invoice-item/invoice-item.component';
 export const InvoicePage = ({ token, checkUserToken, fetchUserInvoice, invoices}) => {
     useEffect(()=> {
         checkUserToken(token);
+        if(token){
+            fetchUserInvoice(token)
+        }
     }, [checkUserToken, token])
     
     return (
     <div className="invoicePageContainer">
-       <h3> View Invoices </h3>
-       <button onClick={()=>fetchUserInvoice(token)}>DO IT</button>
+       <h3> My Invoices </h3>
        <div className="invoiceListContainer">
         { 
            invoices && invoices.map((item,idx) => 
