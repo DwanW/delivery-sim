@@ -13,7 +13,7 @@ export const InvoicePage = ({ token, checkUserToken, fetchUserInvoice, invoices}
         if(token){
             fetchUserInvoice(token)
         }
-    }, [checkUserToken, token])
+    }, [checkUserToken, token, fetchUserInvoice])
     
     return (
     <div className="invoicePageContainer">
