@@ -58,6 +58,10 @@
         .totalContainer{
             margin-left: 10px;
             border-top: 1px solid gray;
+
+            &:last-child {
+                font-weight: 600;
+            }
         }
     }
 
