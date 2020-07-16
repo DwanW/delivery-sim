@@ -1,4 +1,5 @@
 import UserActionTypes from './user.types';
+import { addSnackBarAlert } from '../snackbar/snackbar.actions';
 
 export const signInStart = () => ({
     type: UserActionTypes.SIGN_IN_START,
@@ -51,9 +52,11 @@ export const signInStartAsync = (username, password) => {
                 })
             } else {
                 dispatch(signInFailure("could not sign in"));
+                dispatch(addSnackBarAlert("COULD NOT SIGN IN, PLEASE TRY AGAIN"))
             }
         } catch (error) {
             dispatch(signInFailure("could not sign in"));
+            dispatch(addSnackBarAlert("COULD NOT SIGN IN, PLEASE TRY AGAIN"))
         }
     }
 }
@@ -77,9 +80,11 @@ export const signUpStartAsync = (username, email, password) => {
                 dispatch(signInStartAsync(username, password))
             } else {
                 dispatch(signUpFailure("sign up failed"));
+                dispatch(addSnackBarAlert("COULD NOT SIGN UP, PLEASE TRY AGAIN"))
             }
         } catch (error) {
             dispatch(signUpFailure("could not sign up"));
+            dispatch(addSnackBarAlert("COULD NOT SIGN UP, PLEASE TRY AGAIN"))
         }
     }
 }
@@ -103,9 +108,11 @@ export const checkUserTokenAsync = (token) => {
             console.log(respData)
             if(response.status !== 200){
                 dispatch(signOut());
+                dispatch(addSnackBarAlert("SESSION EXPIRED, PLEASE SIGN IN AGAIN"))
             }
         } catch (error) {
             dispatch(signOut());
+            dispatch(addSnackBarAlert("PLEASE SIGN IN AGAIN"))
         }
     }
 }
@@ -141,10 +148,11 @@ export const fetchUserInvoiceStartAsync = (token) => {
             if(response.status === 200){
                 dispatch(fetchInvoiceSuccess(respData));
             } else{
-                throw new Error("need sign in")
+                throw new Error("need sign in");
             }
         } catch (error) {
             dispatch(fetchInvoiceFailure(error));
+            dispatch(addSnackBarAlert("PLEASE SIGN IN"))
         }
     }
 }

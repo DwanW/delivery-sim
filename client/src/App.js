@@ -10,6 +10,7 @@ import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import CheckoutPage from './pages/checkout/checkout.component';
 import InvoicePage from './pages/user-invoice/user-invoice.component';
+import SnackBar from './components/snackbar/snackbar.component';
 
 const App = ({currentCollection, currentUser}) => {
   return (
@@ -22,6 +23,7 @@ const App = ({currentCollection, currentUser}) => {
         <Route exact path='/checkout' component={CheckoutPage} />
         <Route exact path='/myacc' render={()=> currentUser? <InvoicePage />:(<Redirect to='/signin'/> )} />
       </Switch>
+      <SnackBar autoHideDuration={5000} backgroundColor={'#d4d4d4'}/>
     </div>
   );
 }

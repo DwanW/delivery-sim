@@ -60,6 +60,10 @@ const DeliveryInfo = ({ cartItems, token, clearOnCheckout }) => {
 
     const handleCheckout = async () => {
         let checkoutInfo = { cartItems: cartItems, deliveryInfo: deliveryInfo, }
+        let { schedule } = deliveryInfo;
+
+        // to do: cannot let user submit empty schedule;
+        // if (schedule === "" || schedule)
 
         let requestOptions = {
             method: 'POST',

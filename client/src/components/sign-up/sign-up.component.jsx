@@ -4,10 +4,11 @@ import FormInput from '../form-input/form-input';
 import CustomButton from '../custom-button/custom-button.component';
 import { signUpStartAsync } from '../../redux/user/user.actions';
 import { connect } from 'react-redux';
+import { addSnackBarAlert } from '../../redux/snackbar/snackbar.actions';
 
 import './sign-up.styles.scss';
 
-const SignUp = ({signUpThenSignIn}) => {
+const SignUp = ({signUpThenSignIn, addAlertMessage}) => {
     const [userCredentials, setUserCredentials] = useState({
         username: '',
         email: '',
@@ -20,7 +21,7 @@ const SignUp = ({signUpThenSignIn}) => {
     const handleSubmit = async event => {
         event.preventDefault();
         if (password !== confirmPassword) {
-            alert("passwords don't match");
+            addAlertMessage("PASSWORD DON'T MATCH")
             return;
         }
         signUpThenSignIn( username, email, password );
@@ -74,7 +75,8 @@ const SignUp = ({signUpThenSignIn}) => {
     )
 }
 const mapDispatchToProps = dispatch => ({
-    signUpThenSignIn: (username, email, password) => dispatch(signUpStartAsync(username, email, password))
+    signUpThenSignIn: (username, email, password) => dispatch(signUpStartAsync(username, email, password)),
+    addAlertMessage: (message) => dispatch(addSnackBarAlert(message))
 });
 
 export default connect(null,mapDispatchToProps)(SignUp);

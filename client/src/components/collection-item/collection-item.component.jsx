@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import './collection-item.styles.scss'
 
 import { addItem } from '../../redux/cart/cart.actions';
+import { addSnackBarAlert } from '../../redux/snackbar/snackbar.actions';
 
-const CollectionItem = ({ item, addItemToCart }) => {
+const CollectionItem = ({ item, addItemToCart, addAlertMessage }) => {
     const { ItemName, ImgUrl, Price, Description } = item;
 
     return (
@@ -13,7 +14,7 @@ const CollectionItem = ({ item, addItemToCart }) => {
                 <div className='collectionItemName'>{ItemName}</div>
                 <div className='collectionItemDescription'>{Description}</div>
                 <div className='collectionItemPrice'>$ {Price}</div>
-                <div className='addButton' onClick={() => addItemToCart(item)}>
+                <div className='addButton' onClick={() => {addItemToCart(item); addAlertMessage('ITEM ADDED') }}>
                     Add to Cart
                 </div>
             </div>
@@ -23,7 +24,8 @@ const CollectionItem = ({ item, addItemToCart }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    addItemToCart: item => dispatch(addItem(item))
+    addItemToCart: item => dispatch(addItem(item)),
+    addAlertMessage: (message) => dispatch(addSnackBarAlert(message))
 });
 
 export default connect(

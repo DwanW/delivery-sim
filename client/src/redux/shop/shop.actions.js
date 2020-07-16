@@ -1,5 +1,6 @@
 import ShopActionTypes from './shop.types';
 import { remapCollection } from './shop.util';
+import { addSnackBarAlert } from '../snackbar/snackbar.actions';
 
 const fetchCollectionsStart = () => ({
     type: ShopActionTypes.FETCH_COLLECTIONS_START,
@@ -53,6 +54,7 @@ export const fetchCollectionsStartAsync = (query) => {
             dispatch(fetchCollectionsSuccess(newData))
         } catch (error) {
             dispatch(fetchCollectionsFailure(error.message));
+            dispatch(addSnackBarAlert("NO RESULT, PLEASE TRY AGAIN"))
         }
     }
 }

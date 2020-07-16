@@ -15,6 +15,7 @@ const SignIn = ({fetchUser}) => {
     const handleSubmit = async event => {
         event.preventDefault();
         fetchUser(username, password);
+        setCredentials({ username:'', password:'' })
     }
 
     const handleChange = event => {
