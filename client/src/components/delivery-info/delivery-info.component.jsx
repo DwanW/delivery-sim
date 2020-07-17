@@ -4,6 +4,7 @@ import './delivery-info.styles.scss';
 
 import { connect } from 'react-redux';
 import { clearCart } from '../../redux/cart/cart.actions';
+import { addSnackBarAlert } from '../../redux/snackbar/snackbar.actions';
 
 import CustomButton from '../custom-button/custom-button.component';
 import DaySelector from '../day-selector/day-selector.component';
@@ -18,7 +19,7 @@ const INITIAL_SCHEDULE = {
     Saturday: [0, 0]
 };
 
-const DeliveryInfo = ({ cartItems, token, clearOnCheckout }) => {
+const DeliveryInfo = ({ cartItems, token, clearOnCheckout, addAlertMessage }) => {
     const [deliveryInfo, setDeliveryInfo] = useState({ address: '', schedule: '' });
 
     const { address, schedule } = deliveryInfo;
@@ -60,10 +61,12 @@ const DeliveryInfo = ({ cartItems, token, clearOnCheckout }) => {
 
     const handleCheckout = async () => {
         let checkoutInfo = { cartItems: cartItems, deliveryInfo: deliveryInfo, }
-        let { schedule } = deliveryInfo;
 
         // to do: cannot let user submit empty schedule;
-        // if (schedule === "" || schedule)
+        if (address === "" || schedule === "" || Object.values(schedule).flat().join("") === "00000000000000"){
+            addAlertMessage('PLEASE COMPLETE DELIVERY INFO FOR YOUR DELIVERY')
+            return;
+        }
 
         let requestOptions = {
             method: 'POST',
@@ -74,10 +77,14 @@ const DeliveryInfo = ({ cartItems, token, clearOnCheckout }) => {
 
         try {
             const response = await fetch("http://127.0.0.1:5000/checkout", requestOptions);
-            response.json().then(data => console.log(data))
-            clearOnCheckout()
+            if(response.status === 200){
+                clearOnCheckout();
+                addAlertMessage('CHECK OUT COMPLETE, THANKS FOR SHOPPING');
+            } else if(response.status === 401){
+                addAlertMessage('SESSION EXPIRED, PLEASE SIGN IN AGAIN');
+            }
         } catch (error) {
-            console.log(error)
+            addAlertMessage('CHECK OUT ERROR, PLEASE TRY AGAIN')
         }
     }
 
@@ -133,7 +140,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    clearOnCheckout: () => dispatch(clearCart())
+    clearOnCheckout: () => dispatch(clearCart()),
+    addAlertMessage: (message) => dispatch(addSnackBarAlert(message))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeliveryInfo);
