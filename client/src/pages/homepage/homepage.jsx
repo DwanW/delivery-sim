@@ -4,10 +4,11 @@ import Hero from '../../components/hero/hero.component';
 
 import './homepage.styles.scss';
 
-const HomePage = () => (
+const HomePage = () => {
+    return(
     <div className='HomePageContainer'>
         <Hero />
     </div>
-)
+)}
 
 export default HomePage;

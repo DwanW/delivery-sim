@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import './hero.styles.scss'
 
-import SpinContainer from '../with-spinner/spin-container.component';
+import Spinner from '../with-spinner/spinner.component';
 
 import {fetchCollectionsStartAsync} from '../../redux/shop/shop.actions';
 
@@ -17,7 +17,7 @@ const Hero = ({isLoading, fetchCollections}) => {
             <div className="main-title">Your Local Delivery</div>
             <div className="main-input">
                 <input onChange={handleChange} name="location" type="text" placeholder="Enter Your City Location" autoComplete="off"></input>
-                <button onClick={() => fetchCollections(value)}>{isLoading? <SpinContainer />: "Find Local Restaurants".toUpperCase()}</button>
+                <button onClick={() => fetchCollections(value)}>{isLoading? <Spinner />: "Find Local Restaurants".toUpperCase()}</button>
             </div>
         </div>
     )
