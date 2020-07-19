@@ -1,0 +1,14 @@
+click
+Flask
+Flask-Cors
+gunicorn
+itsdangerous
+Jinja2
+MarkupSafe
+pip
+psycopg2
+PyJWT
+setuptools
+six
+Werkzeug
+wheel
