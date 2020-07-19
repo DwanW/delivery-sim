@@ -7,6 +7,16 @@ verify_ssl = true
 
 [packages]
 gunicorn = "*"
+click = "*"
+itsdangerous = "*"
+psycopg2 = "*"
+six = "*"
+Flask = "*"
+Flask-Cors = "*"
+Jinja2 = "*"
+MarkupSafe = "*"
+PyJWT = "*"
+Werkzeug = "*"
 
 [requires]
 python_version = "3.8"
