@@ -9,7 +9,6 @@
   "scripts": {
     "client": "cd client && npm start",
     "server": "pipenv shell && python server.py",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "build": "cd client && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,7 +23,5 @@
   },
   "homepage": "https://github.com/DwanW/delivery-sim#readme",
   "dependencies": {},
-  "devDependencies": {
-    "concurrently": "^5.2.0"
-  }
+  "devDependencies": {}
 }
