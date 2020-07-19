@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, send_from_directory
 from flask_cors import CORS
+import os
 import psycopg2 as pg2
 import jwt
 import atexit
@@ -9,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash,safe_s
 import datetime
 from functools import wraps
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='client/build')
 CORS(app)
 
 app.config['SECRET_KEY'] = 'camel2020'
@@ -22,6 +23,15 @@ psycopg2.extras.register_uuid()
 cur.execute('SELECT * FROM category')
 category_data = cur.fetchall()
 category_dict = {name:id for id, name in category_data}
+
+# serving react app
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 def token_required(f):
 	@wraps(f)
