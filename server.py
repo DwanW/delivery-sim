@@ -31,9 +31,9 @@ category_dict = {name:id for id, name in category_data}
 @app.route('/<path:path>')
 def serve(path):
     if path != "" and os.path.exists(app.static_folder + '/' + path):
-    	return send_from_directory(app.static_folder, path)
+        return send_from_directory(app.static_folder, path)
     else:
-		return jsonify({'message':'sending files'})
+        return jsonify({'message':'sending files'})
 # return send_from_directory(app.static_folder, 'index.html')
 
 def token_required(f):
