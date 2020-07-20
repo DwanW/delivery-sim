@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request, make_response, send_from_directory
 from flask_cors import CORS
-import os
 import psycopg2 as pg2
 import jwt
 import atexit
@@ -10,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash,safe_s
 import datetime
 from functools import wraps
 
-app = Flask(__name__, static_folder='client/build/static')
+app = Flask(__name__)
 CORS(app)
 
 DATABASE_URL = 'postgres://apxhnevbsuvedq:b54fb1e2f70beac65704989baee9d9df90d007b35d462732b050809a03615962@ec2-52-204-232-46.compute-1.amazonaws.com:5432/de8dbo0et28m82'
@@ -25,15 +24,6 @@ psycopg2.extras.register_uuid()
 cur.execute('SELECT * FROM category')
 category_data = cur.fetchall()
 category_dict = {name:id for id, name in category_data}
-
-# serving react app
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(os.path.abspath('client/build'), 'index.html')
 
 def token_required(f):
 	@wraps(f)
