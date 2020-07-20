@@ -18,7 +18,7 @@ DATABASE_URL = 'postgres://apxhnevbsuvedq:b54fb1e2f70beac65704989baee9d9df90d007
 app.config['SECRET_KEY'] = 'camel2020'
 # initialize db connection
 secret = '123'
-conn = pg2.connect(DATABASE_URL, user='postgres',password=secret, sslmode='require')
+conn = pg2.connect(DATABASE_URL, user='postgres',password=secret)
 cur = conn.cursor()
 psycopg2.extras.register_uuid()
 
