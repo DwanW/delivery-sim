@@ -10,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash,safe_s
 import datetime
 from functools import wraps
 
-app = Flask(__name__, static_folder='./client/build')
+app = Flask(__name__, static_folder='../client/build')
 CORS(app)
 
 DATABASE_URL = 'postgres://apxhnevbsuvedq:b54fb1e2f70beac65704989baee9d9df90d007b35d462732b050809a03615962@ec2-52-204-232-46.compute-1.amazonaws.com:5432/de8dbo0et28m82'
