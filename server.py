@@ -33,7 +33,7 @@ def serve(path):
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         return send_from_directory(app.static_folder, path)
     else:
-        return send_from_directory('client/build', 'index.html')
+        return send_from_directory(os.path.abspath('client/build'), 'index.html')
 
 def token_required(f):
 	@wraps(f)
