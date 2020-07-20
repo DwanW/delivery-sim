@@ -13,14 +13,14 @@ from functools import wraps
 app = Flask(__name__, static_folder='client/build')
 CORS(app)
 
-# DATABASE_URL = 'postgres://apxhnevbsuvedq:b54fb1e2f70beac65704989baee9d9df90d007b35d462732b050809a03615962@ec2-52-204-232-46.compute-1.amazonaws.com:5432/de8dbo0et28m82'
+DATABASE_URL = 'postgres://apxhnevbsuvedq:b54fb1e2f70beac65704989baee9d9df90d007b35d462732b050809a03615962@ec2-52-204-232-46.compute-1.amazonaws.com:5432/de8dbo0et28m82'
 
-# app.config['SECRET_KEY'] = 'camel2020'
-# # initialize db connection
-# secret = 'b54fb1e2f70beac65704989baee9d9df90d007b35d462732b050809a03615962'
-# conn = pg2.connect(DATABASE_URL, user='apxhnevbsuvedq', password=secret, sslmode='require')
-# cur = conn.cursor()
-# psycopg2.extras.register_uuid()
+app.config['SECRET_KEY'] = 'camel2020'
+# initialize db connection
+secret = 'b54fb1e2f70beac65704989baee9d9df90d007b35d462732b050809a03615962'
+conn = pg2.connect(DATABASE_URL, user='apxhnevbsuvedq', password=secret, sslmode='require')
+cur = conn.cursor()
+psycopg2.extras.register_uuid()
 
 cur.execute('SELECT * FROM category')
 category_data = cur.fetchall()
